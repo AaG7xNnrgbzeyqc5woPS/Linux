@@ -1,0 +1,31 @@
+https://www.jianshu.com/p/c0b63aee1c74
+OpenSSL 指令记录
+---------------------------
+
+RSA密钥操作
+
+    生成RSA密钥（无加密）openssl genrsa -out rsa_private.key 1024
+    生成RSA公钥openssl rsa -in rsa_private.key -pubout -out rsa_public.key(-pubout指定输出的为公钥)
+    生成RSA密钥（aes256加密）openssl genrsa -aes256 -passout pass:123123 -out rsa_aes_private.key 1024 (-passout 代替shell进行密码输入，否则会有提示密码输入的选项)
+    生成RSA公钥（通过aes256加密的密钥生成）openssl rsa -in rsa_aes_private.key -passin pass:123123 -pubout -out rsa_aes_pub.key(-passin 同样代替shell输入密码)
+    私钥转换成非加密：openssl rsa -in rsa_aes_private.key -passin pass:123123 -out rsa_stripe_private.key
+    私钥转为加密：openssl rsa -in rsa_stripe_private.key -aes256 -passout pass:123123 -out rsa_reaes_private.key
+    私钥PEM转DER：openssl rsa -in rsa_aes_private.key -passin pass:123123 -outform der -out rsa_aesDer_private.key（用-inform和-outform来指定输入和输出的格式）
+    查看密钥信息：openssl rsa -in rsa_aes_private.key -noout -text -passin pass:123123
+    查看公钥信息：openssl rsa -pubin -in rsa_public.key -noout -text(-pubin 用来指定输入的是公钥)
+    PKCS#1转PKCS#8：openssl pkcs8 topk8 -in rsa_private.key -passout pass:123123 -out pk_private.key(默认PKCS#8开启密码加密，所以使用-passout，可以通过-nocrypt取消加密)
+    MAC导出的p12文件导出为pem格式：openssl pkcs12 -in a.p12 -nodes [-nokeys/-nocerts] -out aPEM.pem，其中-nokeys表示输出没有私钥，-nocerts表示输出没有公钥
+
+作者：效宇笑语
+链接：https://www.jianshu.com/p/c0b63aee1c74
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+----------------------------------------------------
+
+学习笔记：
+
+1，查看私钥信息
+openssl rsa -in id_rsa -noout -text
+可以查到：
+  RSA Private-Key: (2048 bit, 2 primes)
+其它信息忽略，不懂，不管他
